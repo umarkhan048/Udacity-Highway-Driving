@@ -16,7 +16,7 @@ using std::vector;
 
 #define MAX_ACC 0.224
 #define MAX_VEL 49.5
-#define SAFE_DIST 25
+#define SAFE_DIST 30
 
 
 int main() {
@@ -122,12 +122,15 @@ int main() {
                 vehicle_lane = 0;
               }
               // middle lane
-              if (d < 8 && d > 4) {
+              else if (d < 8 && d > 4) {
                 vehicle_lane = 1;
               }
               // right lane
-              if (d < 12 && d > 8) {
+              else if (d < 12 && d > 8) {
                 vehicle_lane = 2;
+              }
+              else {
+                continue;
               }
 
               // Speed of the detected vehicle object
