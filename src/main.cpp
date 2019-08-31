@@ -14,9 +14,9 @@ using nlohmann::json;
 using std::string;
 using std::vector;
 
-#define MAX_ACC 0.224
+#define MAX_ACC 0.2
 #define MAX_VEL 49.5
-#define SAFE_DIST 30
+#define SAFE_DIST 25
 
 
 int main() {
@@ -107,10 +107,10 @@ int main() {
 		  }
 		  
           bool vehicle_front = false;
+          double vehicle_front_vel;
           bool vehicle_left = false;
           bool vehicle_right = false;
           
-		  // find ref_v to use
 		  for (int i = 0; i < sensor_fusion.size(); i++) {
 			  
 			  float d = sensor_fusion[i][6];
@@ -143,8 +143,9 @@ int main() {
 
               if (vehicle_lane == lane) {
                 // another vehicle in the ego lane
-                if (check_car_s > car_s && check_car_s - car_s < 40) {
+                if (check_car_s > car_s && check_car_s - car_s < SAFE_DIST) {
                   vehicle_front = true;
+                  vehicle_front_vel = vx_inlane_obj;
                 }
               }
               else if (vehicle_lane - lane == -1) {
@@ -174,11 +175,6 @@ int main() {
            }
          }
          else {
-           if (lane != 1) {
-             if ((lane == 0 && !vehicle_right) || (lane == 2 && !vehicle_left)) {
-               lane = 1;
-             }
-           }
            if (ref_vel < MAX_VEL) {
              speed_diff += MAX_ACC;
            }
